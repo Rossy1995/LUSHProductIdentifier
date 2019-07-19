@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -14,19 +13,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.api.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,16 +34,15 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button takePicture;
-    ImageView imageView;
+    private Button takePicture;
+    private ImageView imageView;
     private Bitmap bitmap;
-
-    String compressedImage;
+    public static ArrayList<DataModel> dataModelArrayList;
 
     private static final int RECORD_REQUEST_CODE = 101;
     private static final int CAMERA_REQUEST_CODE = 1337;
 
-    public static final String FILE_UPLOAD_URL = "http://192.168.43.111:5000/api";
+    private static final String FILE_UPLOAD_URL = "http://192.168.43.111:5000/api";
 
 
     @Override
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void takePictureFromCamera() {
+    private void takePictureFromCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
     }
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             bitmap = (Bitmap) data.getExtras().get("data");
-            compressedImage = imageToString(bitmap);
+            //String compressedImage = imageToString(bitmap);
             imageView.setImageBitmap(bitmap);
             try {
                 uploadImage();
@@ -118,10 +116,58 @@ public class MainActivity extends AppCompatActivity {
                 )
         {
         };
+
+        // Creating volley request obj
+        /*StringRequest stringRequest = new StringRequest(Request.Method.POST, FILE_UPLOAD_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response: ", response);
+
+                        try
+                        {
+                            JSONObject obj = new JSONObject(response);
+                            if(obj.optString("status").equals("true")){
+
+                                dataModelArrayList = new ArrayList<>();
+                                JSONArray dataArray  = obj.getJSONArray("data");
+
+                                for (int i = 0; i < dataArray.length(); i++) {
+
+                                    DataModel playerModel = new DataModel();
+                                    JSONObject dataObject = dataArray.getJSONObject(i);
+
+                                    playerModel.setName(dataObject.getString("name"));
+                                    playerModel.setImgURL(dataObject.getString("imgURL"));
+
+                                    dataModelArrayList.add(playerModel);
+
+                                    displayResults();
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d("Error message", "Error: " + error.getMessage());
+                    }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        requestQueue.add(stringRequest);*/
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(this).add(jsonObjectRequest);
         Log.i("JSON: ", "Request body: " + new String(jsonObjectRequest.getBody()));
     }
-
+    
     private String imageToString(Bitmap bitmap) {
         Log.i("Bitmap test: ","" + bitmap);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
