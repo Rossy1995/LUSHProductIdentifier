@@ -9,17 +9,14 @@ import static com.example.lushproductidentifier.MainActivity.dataModelArrayList;
 
 public class ResultsActivity extends AppCompatActivity {
 
-    private ListAdapter listAdapter;
-    private ListView listView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        listView = findViewById(R.id.json_results);
+        ListView listView = findViewById(R.id.json_results);
 
-        listAdapter = new ListAdapter(this, dataModelArrayList);
+        ListAdapter listAdapter = new ListAdapter(this, dataModelArrayList);
         listView.setAdapter(listAdapter);
 
 
