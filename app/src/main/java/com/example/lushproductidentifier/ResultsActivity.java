@@ -10,7 +10,7 @@ import static com.example.lushproductidentifier.MainActivity.dataModelArrayList;
 public class ResultsActivity extends AppCompatActivity {
 
     private ListAdapter listAdapter;
-    private ListView listView;
+    private ListView listView;//this is a test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
