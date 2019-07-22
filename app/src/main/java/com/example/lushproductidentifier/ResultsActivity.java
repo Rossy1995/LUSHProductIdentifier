@@ -3,26 +3,21 @@ package com.example.lushproductidentifier;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ListView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import static com.example.lushproductidentifier.MainActivity.dataModelArrayList;
 
 public class ResultsActivity extends AppCompatActivity {
 
+    private ListAdapter listAdapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        String data = getIntent().getStringExtra("data");
-
-        try {
-            JSONObject json = new JSONObject(data);
-            Log.d("JSON contents: ", json.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        listAdapter = new ListAdapter(this, dataModelArrayList);
+        listView.setAdapter(listAdapter);
     }
 }
