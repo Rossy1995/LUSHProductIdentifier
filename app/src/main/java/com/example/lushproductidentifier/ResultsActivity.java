@@ -21,6 +21,8 @@ private ProductContract.View view;
         ListAdapter listAdapter = new ListAdapter(this, dataModelArrayList);
         listView.setAdapter(listAdapter);
 
+        view.displayProducts("Test");
+
     }
 
 
