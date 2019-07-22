@@ -7,17 +7,28 @@ import android.widget.ListView;
 
 import static com.example.lushproductidentifier.MainActivity.dataModelArrayList;
 
-public class ResultsActivity extends AppCompatActivity {
+public class ResultsActivity extends AppCompatActivity implements ProductContract.presenter{
 
-    private ListAdapter listAdapter;
-    private ListView listView;
+private ProductContract.View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        listAdapter = new ListAdapter(this, dataModelArrayList);
+        ListView listView = findViewById(R.id.json_results);
+
+        ListAdapter listAdapter = new ListAdapter(this, dataModelArrayList);
         listView.setAdapter(listAdapter);
+
     }
+
+
+    @Override
+    public void attachView(ProductContract.View view) {
+
+            this.view = view;
+
+    }
+
 }

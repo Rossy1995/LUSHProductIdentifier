@@ -76,5 +76,4 @@ public class ListAdapter extends BaseAdapter {
         protected TextView tvname;
         protected ImageView iv;
     }
-
 }
